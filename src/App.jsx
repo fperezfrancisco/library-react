@@ -90,7 +90,7 @@ function App() {
       <BrowserRouter>
         <Nav cartItems={totalQuantity} />
         <Routes>
-          <Route path="/" index element={<Home />} />
+          <Route path="/home" index element={<Home />} />
           <Route path="/books" element={<Books books={books} />} />
           <Route
             path="/books/:id"
