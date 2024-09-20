@@ -90,7 +90,7 @@ function App() {
       <BrowserRouter basename="/library-react/">
         <Nav cartItems={totalQuantity} />
         <Routes>
-          <Route path="/home" index element={<Home />} />
+          <Route path="/" index element={<Home />} />
           <Route path="/books" element={<Books books={books} />} />
           <Route
             path="/books/:id"
