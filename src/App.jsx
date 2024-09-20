@@ -87,7 +87,7 @@ function App() {
 
   return (
     <>
-      <BrowserRouter>
+      <BrowserRouter basename="/library-react/">
         <Nav cartItems={totalQuantity} />
         <Routes>
           <Route path="/home" index element={<Home />} />
