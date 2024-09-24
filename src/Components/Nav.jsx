@@ -5,10 +5,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import LibraryLogo from "../assets/Library.svg";
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 
-function Nav({ cartItems, user }) {
+function Nav({ cartItems, user, loading, setLoading }) {
   function openMenu() {
     document.body.classList += " menu--open";
   }
@@ -40,7 +40,9 @@ function Nav({ cartItems, user }) {
           </Link>
           {cartItems > 0 && <span className="cart__length">{cartItems}</span>}
         </li>
-        {user ? (
+        {loading ? (
+          <div className="loadNavSkeleton"></div>
+        ) : user ? (
           <Link to="/userprofile">
             <div className="userCircle">F</div>
           </Link>
@@ -51,6 +53,7 @@ function Nav({ cartItems, user }) {
             </Link>
           </li>
         )}
+
         <button className="btn__menu" onClick={openMenu}>
           <FontAwesomeIcon icon={faBars} />
         </button>

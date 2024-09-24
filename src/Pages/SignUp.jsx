@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase/init";
+import { auth, db } from "../firebase/init";
+import { query, collection, where, getDocs } from "firebase/firestore";
 
-function SignUp({ user, setUser }) {
+function SignUp({ user, setUser, createCart }) {
   const [userEmail, setUserEmail] = useState();
   const [userPassword, setUserPassword] = useState();
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ function SignUp({ user, setUser }) {
           // Signed up
           console.log(userCredential.user);
           setUser(userCredential.user);
-          navigate("/");
+          navigate("/userprofile");
           alert("New User Created!");
           // ...
         })
@@ -28,6 +29,10 @@ function SignUp({ user, setUser }) {
           // ..
         });
     }
+  };
+
+  const handleCreateCart = () => {
+    createCart();
   };
 
   const handleLogin = () => {

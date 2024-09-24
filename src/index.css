@@ -941,6 +941,25 @@ select {
   cursor: pointer;
 }
 
+.loadNavSkeleton {
+  width: 100px;
+  height: 36px;
+  border-radius: 0.5rem;
+  background-color: #bdbdbd;
+  background: linear-gradient(-90deg, #efefef 0%, #fcfcfc 50%, #efefef 100%);
+  background-size: 400% 400%;
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: -135% 0%;
+  }
+}
+
 /* SMALL PHONES, TABLETS, LARGE SMARTPHONES */
 @media (max-width: 768px) {
   .header__description {

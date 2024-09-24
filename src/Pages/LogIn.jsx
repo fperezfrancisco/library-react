@@ -3,22 +3,25 @@ import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase/init";
 
-function LogIn({ user, setUser }) {
+function LogIn({ user, setUser, loading, setLoading }) {
   const [userEmail, setUserEmail] = useState();
   const [userPassword, setUserPassword] = useState();
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoading(true);
     if (userEmail && userPassword) {
       signInWithEmailAndPassword(auth, userEmail, userPassword)
         .then((userCredential) => {
           console.log(userCredential.user);
+          setLoading(false);
           setUser(userCredential.user);
           navigate("/");
           alert("Signed in!");
         })
         .catch((error) => {
+          setLoading(false);
           const errorMessage = error.message;
           console.log(errorMessage);
           alert("Failed sign in: " + errorMessage);

@@ -15,14 +15,45 @@ import Cart from "./Pages/Cart";
 import SignUp from "./Pages/SignUp";
 import LogIn from "./Pages/LogIn";
 import UserProfile from "./Pages/UserProfile";
+import { auth, db } from "./firebase/init";
+import { onAuthStateChanged } from "firebase/auth";
+import { collection, addDoc } from "firebase/firestore";
+import { query, where, getDocs } from "firebase/firestore";
 
 function App() {
+  const [userCartObj, setUserCartObj] = useState();
   const [cart, setCart] = useState([]);
   const [totalQuantity, setTotalQuantity] = useState(0);
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  async function getCartByUid(uid) {
+    const cartCollectionRef = await query(
+      collection(db, "carts"),
+      where("userId", "==", uid)
+    );
+    const { docs } = await getDocs(cartCollectionRef);
+    const dataCarts = docs.map((doc) => doc.data());
+    if (dataCarts.length === 1) {
+      console.log(dataCarts[0]);
+      setUserCartObj(dataCarts[0]);
+    } else {
+      console.log("No cart to set for user cart");
+    }
+  }
+
+  function createCart() {
+    const currCart = {
+      itemTotal: totalQuantity,
+      cartList: cart,
+      userId: user.uid,
+    };
+    addDoc(collection(db, "carts"), currCart);
+  }
 
   function addToCart(book) {
     console.log("add to cart: " + book.title);
+    console.log(cart);
     const newCart = cart;
     if (cart === undefined || cart.length === 0) {
       const newElement = { id: book.id, book: book, quantity: 1 };
@@ -88,12 +119,35 @@ function App() {
   useEffect(() => {
     console.log(cart);
     console.log(user);
-  }, [cart, user]);
+    onAuthStateChanged(auth, (user) => {
+      console.log(user);
+      if (user) {
+        setUser(user);
+      }
+    });
+
+    if (user) {
+      getCartByUid(user.uid);
+    }
+
+    if (userCartObj) {
+      setCart(userCartObj.cartList);
+    }
+
+    setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+  }, [cart, user, loading]);
 
   return (
     <>
       <BrowserRouter basename="/library-react/">
-        <Nav cartItems={totalQuantity} user={user} />
+        <Nav
+          cartItems={totalQuantity}
+          user={user}
+          loading={loading}
+          setLoading={setLoading}
+        />
         <Routes>
           <Route path="/" index element={<Home />} />
           <Route path="/books" element={<Books books={books} />} />
@@ -115,15 +169,31 @@ function App() {
           />
           <Route
             path="/register"
-            element={<SignUp user={user} setUser={setUser} />}
+            element={
+              <SignUp user={user} setUser={setUser} createCart={createCart} />
+            }
           />
           <Route
             path="/login"
-            element={<LogIn user={user} setUser={setUser} />}
+            element={
+              <LogIn
+                user={user}
+                setUser={setUser}
+                loading={loading}
+                setLoading={setLoading}
+              />
+            }
           />
           <Route
             path="/userprofile"
-            element={<UserProfile user={user} setUser={setUser} />}
+            element={
+              <UserProfile
+                user={user}
+                cart={cart}
+                setUser={setUser}
+                createCart={createCart}
+              />
+            }
           />
         </Routes>
         <Footer />
