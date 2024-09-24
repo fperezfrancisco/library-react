@@ -12,10 +12,14 @@ import Books from "./Pages/Books";
 import { books } from "./data";
 import BookInfo from "./Pages/BookInfo";
 import Cart from "./Pages/Cart";
+import SignUp from "./Pages/SignUp";
+import LogIn from "./Pages/LogIn";
+import UserProfile from "./Pages/UserProfile";
 
 function App() {
   const [cart, setCart] = useState([]);
   const [totalQuantity, setTotalQuantity] = useState(0);
+  const [user, setUser] = useState(null);
 
   function addToCart(book) {
     console.log("add to cart: " + book.title);
@@ -83,12 +87,13 @@ function App() {
 
   useEffect(() => {
     console.log(cart);
-  }, [cart]);
+    console.log(user);
+  }, [cart, user]);
 
   return (
     <>
       <BrowserRouter basename="/library-react/">
-        <Nav cartItems={totalQuantity} />
+        <Nav cartItems={totalQuantity} user={user} />
         <Routes>
           <Route path="/" index element={<Home />} />
           <Route path="/books" element={<Books books={books} />} />
@@ -107,6 +112,18 @@ function App() {
                 updateItemCart={updateItemInCart}
               />
             }
+          />
+          <Route
+            path="/register"
+            element={<SignUp user={user} setUser={setUser} />}
+          />
+          <Route
+            path="/login"
+            element={<LogIn user={user} setUser={setUser} />}
+          />
+          <Route
+            path="/userprofile"
+            element={<UserProfile user={user} setUser={setUser} />}
           />
         </Routes>
         <Footer />

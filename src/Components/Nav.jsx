@@ -8,7 +8,7 @@ import LibraryLogo from "../assets/Library.svg";
 import React from "react";
 import { Link } from "react-router-dom";
 
-function Nav({ cartItems }) {
+function Nav({ cartItems, user }) {
   function openMenu() {
     document.body.classList += " menu--open";
   }
@@ -33,15 +33,27 @@ function Nav({ cartItems }) {
             Books
           </Link>
         </li>
-        <button className="btn__menu" onClick={openMenu}>
-          <FontAwesomeIcon icon={faBars} />
-        </button>
+
         <li className="nav__icon">
           <Link className="nav__link" to="/cart">
             <FontAwesomeIcon icon={faCartShopping} />
           </Link>
           {cartItems > 0 && <span className="cart__length">{cartItems}</span>}
         </li>
+        {user ? (
+          <Link to="/userprofile">
+            <div className="userCircle">F</div>
+          </Link>
+        ) : (
+          <li className="nav__list">
+            <Link to="/login" className="nav__link">
+              Log In
+            </Link>
+          </li>
+        )}
+        <button className="btn__menu" onClick={openMenu}>
+          <FontAwesomeIcon icon={faBars} />
+        </button>
       </ul>
       <div className="menu__backdrop">
         <button className="btn__menu btn__menu--close" onClick={closeMenu}>
@@ -49,18 +61,23 @@ function Nav({ cartItems }) {
         </button>
         <ul className="menu__links">
           <li className="menu__list">
-            <Link href="/cart" className="menu__link">
+            <Link to="/" className="menu__link" onClick={closeMenu}>
               Home
             </Link>
           </li>
           <li className="menu__list">
-            <Link href="/books" className="menu__link">
+            <Link to="/books" className="menu__link" onClick={closeMenu}>
               Books
             </Link>
           </li>
           <li className="menu__list">
-            <Link to="/cart" className="menu__link">
+            <Link to="/cart" className="menu__link" onClick={closeMenu}>
               Cart
+            </Link>
+          </li>
+          <li className="menu__list">
+            <Link to="/login" className="menu__link" onClick={closeMenu}>
+              Log In
             </Link>
           </li>
         </ul>
